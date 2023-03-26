@@ -33,11 +33,15 @@ class KeyGen{
 
 class RSA_KeyGen : public KeyGen{
     public:
+        ~RSA_KeyGen() = default;
         explicit RSA_KeyGen(int size);
         std::string getPublicKeyStr() override;
         std::vector<uint8_t> getPublicKeyVec() override;
+        std::vector<uint8_t> getPublicKeyVec_usingBN() const;
+    private:
+        EVP_PKEY_ptr epkey;
 };
-
+/*
 class EC_KeyGen : public KeyGen{
     public:
         explicit EC_KeyGen(int id);
@@ -58,7 +62,7 @@ class EdDSA_KeyGen : public KeyGen{
         std::string getPublicKeyStr() override;
         std::vector<uint8_t> getPublicKeyVec() override;
 };
-
+*/
 //Factory Class
 class AsymmetricKeyPair{
     public:
@@ -73,12 +77,12 @@ class AsymmetricKeyPair{
         */
         KeyGen* generate(int id /* OR size in case of RSA*/){
             switch(this->m_ekey){
-                case eKEY_TYPES::eEC:
-                    return new EC_KeyGen(id);
-                case eKEY_TYPES::eEDDSA:
-                    return new EdDSA_KeyGen(id);;
-                case eKEY_TYPES::eX25519:
-                    return new X25519_KeyGen(id);;
+                // case eKEY_TYPES::eEC:
+                //     return new EC_KeyGen(id);
+                // case eKEY_TYPES::eEDDSA:
+                //     return new EdDSA_KeyGen(id);;
+                // case eKEY_TYPES::eX25519:
+                //     return new X25519_KeyGen(id);;
                 case eKEY_TYPES::eRSA:
                 default:
                     return new RSA_KeyGen(id);;
