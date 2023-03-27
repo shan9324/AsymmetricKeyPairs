@@ -41,14 +41,25 @@ class RSA_KeyGen : public KeyGen{
     private:
         EVP_PKEY_ptr epkey;
 };
-/*
+
 class EC_KeyGen : public KeyGen{
     public:
         explicit EC_KeyGen(int id);
         std::string getPublicKeyStr() override;
         std::vector<uint8_t> getPublicKeyVec() override;
+        std::vector<uint8_t> getPublicKeyVec_usingRaw();
+        virtual ~EC_KeyGen() = default;
+		EC_KeyGen(const EC_KeyGen& ecdsaKeyGenObj) = delete;
+		EC_KeyGen& operator=(const EC_KeyGen&) = delete;
+		EC_KeyGen(EC_KeyGen&&) = delete;
+		EC_KeyGen& operator=(EC_KeyGen&&) = delete;
+    private:
+        EVP_PKEY_CTX_ptr ctx;
+        EVP_PKEY_ptr pkey;
+        EC_KEY_ptr mECkey;
+        int mNid_ECDSA;
 };
-
+/*
 class X25519_KeyGen : public KeyGen{
     public:
         explicit X25519_KeyGen(int id);
@@ -67,18 +78,16 @@ class EdDSA_KeyGen : public KeyGen{
 class AsymmetricKeyPair{
     public:
 
-        AsymmetricKeyPair(eKEY_TYPES ekey):m_ekey(ekey){
-
-        }
+        AsymmetricKeyPair() = default;
         ~AsymmetricKeyPair() = default;
 
         /* Remember: The onus of deleting the newly created object is on the calling class/function.
            The ownership of the object created in factory is completely given to this calling  class/function.
         */
-        KeyGen* generate(int id /* OR size in case of RSA*/){
-            switch(this->m_ekey){
-                // case eKEY_TYPES::eEC:
-                //     return new EC_KeyGen(id);
+        static KeyGen* generate(eKEY_TYPES ekey, int id /* OR size in case of RSA*/){
+            switch(ekey){
+                case eKEY_TYPES::eEC:
+                    return new EC_KeyGen(id);
                 // case eKEY_TYPES::eEDDSA:
                 //     return new EdDSA_KeyGen(id);;
                 // case eKEY_TYPES::eX25519:
@@ -88,9 +97,6 @@ class AsymmetricKeyPair{
                     return new RSA_KeyGen(id);;
             }
         }
-    private:
-        eKEY_TYPES m_ekey;
-
 };
 
 

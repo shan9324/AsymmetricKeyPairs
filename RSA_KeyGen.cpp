@@ -89,6 +89,4 @@ std::vector<uint8_t> RSA_KeyGen::getPublicKeyVec_usingBN() const{
     RSA_free(rsa);
 
     return pub_key;
-
-    
 }
