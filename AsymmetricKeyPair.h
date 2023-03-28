@@ -59,14 +59,17 @@ class EC_KeyGen : public KeyGen{
         EC_KEY_ptr mECkey;
         int mNid_ECDSA;
 };
-/*
+
 class X25519_KeyGen : public KeyGen{
     public:
-        explicit X25519_KeyGen(int id);
+        explicit X25519_KeyGen();
         std::string getPublicKeyStr() override;
         std::vector<uint8_t> getPublicKeyVec() override;
+    private:
+        EVP_PKEY_CTX_ptr ctx;
+        EVP_PKEY_ptr pkey;
 };
-
+/*
 class EdDSA_KeyGen : public KeyGen{
     public:
         explicit EdDSA_KeyGen(int id);
